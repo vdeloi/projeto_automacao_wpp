@@ -1,0 +1,38 @@
+# =======================================================
+# DEPENDÊNCIAS DO PROJETO - AUTOMAÇÃO WHATSAPP COM GENAI
+# =======================================================
+
+# --- Inteligência Artificial & RAG ---
+# SDK oficial do Google para trabalhar com o Gemini, Tool Use e Managed File Search
+google-genai>=0.1.0
+
+# --- Framework Web & Servidor API ---
+# FastAPI: Cria os endpoints e webhooks para receber mensagens
+fastapi>=0.110.0
+# Uvicorn: Servidor de alto desempenho para rodar a aplicação FastAPI
+uvicorn[standard]>=0.28.0
+
+# --- Gestão de Dados e Configurações ---
+# Pydantic: Garante a validação de tipos de dados nas requisições e respostas
+pydantic>=2.6.0
+# Pydantic Settings: Lê variáveis do arquivo .env de forma segura e estruturada
+pydantic-settings>=2.2.0
+# Python-Dotenv: Carrega as variáveis de ambiente do .env para a memória da aplicação
+python-dotenv>=1.0.0
+
+# --- Requisições HTTP (WhatsApp & Integrações) ---
+# Cliente HTTP assíncrono para enviar mensagens para a API do WhatsApp
+httpx>=0.27.0
+
+# --- Banco de Dados (ORM) ---
+# SQLModel: Combina Pydantic e SQLAlchemy para manipular o banco de dados com POO
+sqlmodel>=0.0.16
+
+# --- Testes e Qualidade de Código ---
+# Pytest: Framework para criação e execução de testes automáticos
+pytest>=8.0.0
+
+# --- Calculo de distância linear ---
+geopy>=2.4.0
+
+pytest

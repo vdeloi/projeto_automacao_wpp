@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <!-- Viewport configurado para respeitar áreas seguras e redimensionamento de teclado -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, interactive-widget=resizes-content">
+    <title>WhatsApp Web Mock - Multi-Tenant</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        /* Ocupa a altura real dinâmica da tela do celular */
+        body {
+            background-color: #d1d7db;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;  /* Fallback para navegadores antigos */
+            height: 100dvh; /* Altura dinâmica real em smartphones modernos */
+            overflow: hidden;
+        }
+
+        /* Container Principal */
+        .app-container {
+            display: flex;
+            width: 100%;
+            height: 100%;
+            max-width: 1600px;
+            background-color: #ffffff;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        /* Barra Lateral (Lista de Estabelecimentos) */
+        .sidebar {
+            width: 380px;
+            border-right: 1px solid #e9edef;
+            display: flex;
+            flex-direction: column;
+            background-color: #ffffff;
+            transition: all 0.2s ease-in-out;
+            height: 100%;
+        }
+
+        .sidebar-header {
+            background-color: #f0f2f5;
+            padding: 12px 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #d1d7db;
+            /* Proteção contra entalhe superior em celulares */
+            padding-top: calc(12px + env(safe-area-inset-top, 0px));
+        }
+
+        .sidebar-header h2 {
+            font-size: 1.1rem;
+            color: #111b21;
+        }
+
+        .user-phone-box {
+            padding: 10px 16px;
+            background-color: #f7f8fa;
+            border-bottom: 1px solid #e9edef;
+        }
+
+        .user-phone-box label {
+            font-size: 0.75rem;
+            color: #667781;
+            display: block;
+            margin-bottom: 4px;
+        }
+
+        .user-phone-box input {
+            width: 100%;
+            padding: 8px 10px;
+            border: 1px solid #ced0d1;
+            border-radius: 6px;
+            font-size: 0.9rem;
+        }
+
+        .tenant-list {
+            list-style: none;
+            overflow-y: auto;
+            flex: 1;
+            /* Proteção contra a barra inferior do sistema */
+            padding-bottom: calc(10px + env(safe-area-inset-bottom, 0px));
+        }
+
+        .tenant-item {
+            display: flex;
+            align-items: center;
+            padding: 12px 16px;
+            cursor: pointer;
+            border-bottom: 1px solid #f0f2f5;
+            transition: background 0.15s;
+        }
+
+        .tenant-item:hover, .tenant-item.active {
+            background-color: #f0f2f5;
+        }
+
+        .avatar {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background-color: #25d366;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            font-weight: bold;
+            margin-right: 14px;
+            flex-shrink: 0;
+        }
+
+        .tenant-info h3 {
+            font-size: 0.95rem;
+            color: #111b21;
+            margin-bottom: 2px;
+        }
+
+        .tenant-info p {
+            font-size: 0.8rem;
+            color: #667781;
+        }
+
+        /* Área de Conversa */
+        .chat-area {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            background-color: #efeae2;
+            position: relative;
+            height: 100%;
+        }
+
+        .chat-header {
+            background-color: #f0f2f5;
+            padding: 10px 16px;
+            display: flex;
+            align-items: center;
+            border-bottom: 1px solid #d1d7db;
+            z-index: 10;
+            /* Proteção para entalhes/câmeras frontais */
+            padding-top: calc(10px + env(safe-area-inset-top, 0px));
+        }
+
+        .btn-back {
+            display: none;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            color: #54656f;
+            cursor: pointer;
+            margin-right: 12px;
+            padding: 4px 8px;
+        }
+
+        .chat-header-info h3 {
+            font-size: 0.95rem;
+            color: #111b21;
+        }
+
+        .chat-header-info p {
+            font-size: 0.75rem;
+            color: #667781;
+        }
+
+        .messages-container {
+            flex: 1;
+            padding: 16px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .message {
+            max-width: 80%;
+            padding: 8px 12px;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            line-height: 1.4;
+            word-wrap: break-word;
+            position: relative;
+        }
+
+        .message.sent {
+            background-color: #d9fdd3;
+            align-self: flex-end;
+            border-top-right-radius: 0;
+        }
+
+        .message.received {
+            background-color: #ffffff;
+            align-self: flex-start;
+            border-top-left-radius: 0;
+        }
+
+        /* Área de Digitação com proteção de elevação */
+        .chat-input-area {
+            background-color: #f0f2f5;
+            padding: 10px 16px;
+            /* Garante que o input fique acima da barra de navegação do smartphone */
+            padding-bottom: calc(12px + env(safe-area-inset-bottom, 0px));
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            border-top: 1px solid #e0e0e0;
+        }
+
+        .chat-input-area input {
+            flex: 1;
+            padding: 10px 14px;
+            border: 1px solid #ced0d1;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            outline: none;
+            background-color: #ffffff;
+        }
+
+        .chat-input-area input:focus {
+            border-color: #00a884;
+        }
+
+        .btn-send {
+            background-color: #00a884;
+            color: white;
+            border: none;
+            padding: 10px 16px;
+            border-radius: 8px;
+            font-weight: bold;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: background 0.2s;
+            flex-shrink: 0;
+        }
+
+        .btn-send:hover {
+            background-color: #008f6f;
+        }
+
+        /* 📱 RESPONSIVIDADE PARA DISPOSITIVOS MÓVEIS */
+        @media (max-width: 768px) {
+            .btn-back {
+                display: block;
+            }
+
+            .sidebar {
+                width: 100%;
+                display: flex;
+            }
+
+            .chat-area {
+                display: none;
+                width: 100%;
+            }
+
+            .app-container.show-chat .sidebar {
+                display: none;
+            }
+
+            .app-container.show-chat .chat-area {
+                display: flex;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="app-container" id="appContainer">
+        <!-- 1. Barra Lateral -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <h2>Conversas</h2>
+            </div>
+            
+            <div class="user-phone-box">
+                <label for="phoneNumber">Seu WhatsApp (com DDD):</label>
+                <input type="text" id="phoneNumber" value="5511999999999" placeholder="Ex: 5511999999999">
+            </div>
+
+            <ul class="tenant-list" id="tenantList">
+                <li class="tenant-item active" onclick="selectTenant('clinica_01', 'Clínica Odontológica Sorriso', '🦷')">
+                    <div class="avatar">🦷</div>
+                    <div class="tenant-info">
+                        <h3>Clínica Odontológica</h3>
+                        <p>Atendimento, agendamentos e consultas</p>
+                    </div>
+                </li>
+                <li class="tenant-item" onclick="selectTenant('padaria_01', 'Padaria Pão Quente', '🥖')">
+                    <div class="avatar">🥖</div>
+                    <div class="tenant-info">
+                        <h3>Padaria Pão Quente</h3>
+                        <p>Cardápio, fornadas e produtos frescos</p>
+                    </div>
+                </li>
+            </ul>
+        </aside>
+
+        <!-- 2. Área do Chat -->
+        <main class="chat-area">
+            <header class="chat-header">
+                <button class="btn-back" id="btnBack" onclick="goBackToTenants()" title="Trocar de estabelecimento">←</button>
+                <div class="avatar" id="currentAvatar" style="width: 40px; height: 40px; font-size: 1rem; margin-right: 10px;">🦷</div>
+                <div class="chat-header-info">
+                    <h3 id="currentTenantName">Clínica Odontológica Sorriso</h3>
+                    <p id="chatStatus">Online</p>
+                </div>
+            </header>
+
+            <section class="messages-container" id="messagesContainer">
+                <div class="message received">
+                    Olá! Sou o assistente virtual. Como posso ajudar você hoje?
+                </div>
+            </section>
+
+            <footer class="chat-input-area">
+                <input type="text" id="messageInput" placeholder="Mensagem..." autocomplete="off">
+                <button class="btn-send" onclick="sendMessage()">Enviar</button>
+            </footer>
+        </main>
+    </div>
+
+    <script>
+        let currentTenantId = 'clinica_01';
+        let isProcessing = false;
+
+        const appContainer = document.getElementById('appContainer');
+        const messageInput = document.getElementById('messageInput');
+        const messagesContainer = document.getElementById('messagesContainer');
+        const phoneNumberInput = document.getElementById('phoneNumber');
+
+        messageInput.addEventListener('keypress', function (e) {
+            if (e.key === 'Enter') {
+                sendMessage();
+            }
+        });
+
+        function selectTenant(tenantId, name, icon) {
+            currentTenantId = tenantId;
+            document.getElementById('currentTenantName').innerText = name;
+            document.getElementById('currentAvatar').innerText = icon;
+
+            document.querySelectorAll('.tenant-item').forEach(item => item.classList.remove('active'));
+            event.currentTarget.classList.add('active');
+
+            appContainer.classList.add('show-chat');
+
+            messagesContainer.innerHTML = `
+                <div class="message received">
+                    Olá! Você está falando com ${name}. Como posso ajudar?
+                </div>
+            `;
+        }
+
+        function goBackToTenants() {
+            appContainer.classList.remove('show-chat');
+        }
+
+        async function sendMessage() {
+            const message = messageInput.value.trim();
+            const phoneNumber = phoneNumberInput.value.trim();
+
+            if (!message || isProcessing) return;
+
+            appendMessage(message, 'sent');
+            messageInput.value = '';
+            isProcessing = true;
+            document.getElementById('chatStatus').innerText = 'Digitando...';
+
+            try {
+                const response = await fetch('/api/v1/chat/mock', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        tenant_id: currentTenantId,
+                        phone_number: phoneNumber,
+                        message: message
+                    })
+                });
+
+                if (!response.ok) {
+                    throw new Error('Falha na comunicação com o servidor.');
+                }
+
+                const data = await response.json();
+                appendMessage(data.response, 'received');
+            } catch (error) {
+                console.error(error);
+                appendMessage('Desculpe, ocorreu um erro ao processar sua mensagem.', 'received');
+            } finally {
+                isProcessing = false;
+                document.getElementById('chatStatus').innerText = 'Online';
+            }
+        }
+
+        function appendMessage(text, type) {
+            const msgDiv = document.createElement('div');
+            msgDiv.classList.add('message', type);
+            msgDiv.innerText = text;
+            messagesContainer.appendChild(msgDiv);
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,100 @@
+# =======================================================
+# ARQUIVOS E PASTAS IGNORADOS PELO GIT
+# Projeto: Automação WhatsApp com GenAI
+# =======================================================
+
+# -------------------------------------------------------
+# 1. AMBIENTES VIRTUAIS (Leves e Reinstaláveis)
+# -------------------------------------------------------
+# Não enviamos as bibliotecas baixadas, apenas o requirements.txt
+venv/
+.venv/
+env/
+ENV/
+env.bak/
+venv.bak/
+
+# -------------------------------------------------------
+# 2. SEGURANÇA E CHAVES DE API (CRÍTICO!)
+# -------------------------------------------------------
+# O arquivo .env contém a tua GEMINI_API_KEY e outras credenciais
+.env
+.env.local
+.env.*.local
+*.pem
+*.key
+
+# -------------------------------------------------------
+# 3. CACHE E ARQUIVOS COMPILADOS DO PYTHON
+# -------------------------------------------------------
+# Arquivos temporários gerados automaticamente na execução
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+
+# -------------------------------------------------------
+# 4. BANCO DE DADOS LOCAL E ARQUIVOS DE DADOS
+# -------------------------------------------------------
+# Ignoramos bancos de dados de teste local e logs
+*.db
+*.sqlite3
+data/*.db
+*.log
+
+# -------------------------------------------------------
+# 5. CONFIGURAÇÕES DO EDITOR E SISTEMA OPERACIONAL
+# -------------------------------------------------------
+# Configurações do VS Code ou PyCharm
+.vscode/
+!.vscode/settings.json
+.idea/
+*.suo
+*.user
+
+# Arquivos invisíveis gerados pelo sistema (Windows / macOS)
+.DS_Store
+Thumbs.db
+ehthumbs.db
+
+# -------------------------------------------------------
+# 6. TESTES E COBERTURA DE CÓDIGO
+# -------------------------------------------------------
+.pytest_cache/
+.coverage
+htmlcov/
+
+# ==========================================
+# 🔒 ARQUIVOS DE SEGURANÇA E VARIÁVEIS (.ENV)
+# ==========================================
+.env
+.env.local
+.env.*.local
+*.env
+
+# ==========================================
+# 🐍 AMBIENTE VIRTUAL E PYTHON
+# ==========================================
+venv/
+env/
+ENV/
+.venv/
+__pycache__/
+*.py[cod]
+*$py.class
+*.pyc
+
+# ==========================================
+# 🧪 TESTES E CACHE
+# ==========================================
+.pytest_cache/
+.coverage
+htmlcov/
+
+# ==========================================
+# 📂 DADOS LOCAIS E UPLOADS (OPCIONAL)
+# ==========================================
+# data/             # Descomente caso não queira subir arquivos de dados locais
+.vscode/
+.idea/
