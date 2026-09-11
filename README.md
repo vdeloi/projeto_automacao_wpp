@@ -154,8 +154,6 @@ Documentação Swagger interativa: `http://127.0.0.1:8000/docs`
 * [x] Subir no GitHub
 * [x] Implementar persistência de sessões e banco de dados com SQLite
 * [x] Implementar ferramenta de comunicação do modelo com o banco de dados
-* [ ] Entender a arquitetura do nosso produto até agora
-* [ ] Refatorar o código
 * [ ] Migrar para SQLAlchemy assíncrono com PostgreSQL
 * [ ] Tornar o código mais assíncrono no geral
 * [ ] Implementar Injeção de Dependências
