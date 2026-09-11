@@ -151,15 +151,36 @@ Documentação Swagger interativa: `http://127.0.0.1:8000/docs`
 
 ## 📋 Roadmap de Desenvolvimento
 
-* [x] Estrutura inicial do projeto e Clean Architecture
-* [x] Frontend Mock do WhatsApp Web
-* [x] Definição de Abstração POO para o Gemini (`BaseLLMAgent` e `GeminiInteractionsAgent`)
-* [x] Atualização do README com foco em Multi-Tenancy e Escalabilidade
-* [x] Configuração de leitura segura do `.env` com Pydantic (`app/core/config.py`) com blocos `try/else`
-* [ ] Implementação do gerenciador Multi-Tenant de empresas/sessões
-* [ ] Implementação de RAG com busca em arquivos gerenciados
-* [ ] Criação de Tools dinâmicas por nicho (Clínicas, Padarias)
-* [ ] Integração com a Meta Cloud API (WhatsApp Oficial)
-* [ ] Implantação escalável na AWS
+[x] Subir no GitHub
+[x] Implementar persistência de sessões e banco de dados com SQLite
+[x] Implementar ferramenta de comunicação do modelo com o banco de dados
+[ ] Entender a arquitetura do nosso produto até agora
+[ ] Refatorar o código
+[ ] Migrar para SQLAlchemy assíncrono com PostgreSQL
+[ ] Tornar o código mais assíncrono no geral
+[ ] Implementar Injeção de Dependências
+[ ] Desacoplar o RAG do Startup (para tornar o startup do servidor instantâneo)
+[ ] Usar uma biblioteca de logging
+[ ] Implementar testes 
+[ ] Migrar para o API da Whatsapp business da META
+[ ] Fila assíncrona para processamento de mensagens	
+[ ] Handover para humano
+[ ] Mecanismos de Fallback
+[ ] Engenharia de prompt
+[ ] Rotina automatizada de Backup dos Bancos
+[ ] Integrar uma ferramenta como Langfuse, Helicone ou logs estruturados para auditar onde e por que o modelo alucinou ou qual ferramenta demorou para responder.
+[ ] Rate Limiting
+[ ] Implementar dashboard dos tenants
+[ ] Rastreamento de tokens
+[ ] Pensar em segurança da aplicação (como eles podem hackear a aplicação) e medidas contra prompt injection
+[ ] Segurança e Conformidade (LGPD)
+[ ] Pensar em um parceiro de projeto (Lontro? Robson? Lucas?)
+[ ] Estimação de custos e precificação da aplicação
+[ ] Pesquisar Docker
+[ ] Deploy no AWS (pesquisar sobre o AWS primeiro)
+[ ] Abrir CNPJ e pesquisar sobre questões burocráticas
+[ ] Pitch e slides da apresentação
+[ ] Piloto com primeiro cliente
+
 
 ```
