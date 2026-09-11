@@ -1,6 +1,6 @@
 
 
-```markdown
+
 # 🤖 Assistente Virtual Multi-Tenant para WhatsApp (Google GenAI)
 
 Uma plataforma profissional, modular, altamente escalável e resiliente para automação de atendimento via WhatsApp utilizando inteligência artificial generativa com a SDK oficial **`google-genai`** (Interactions API).
@@ -74,7 +74,7 @@ projeto_automacao_wpp/
 └── mock_frontend/        # Interface web para simular o WhatsApp
     └── index.html
 
-```
+
 
 ---
 
