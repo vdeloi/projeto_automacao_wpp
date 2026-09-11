@@ -74,7 +74,7 @@ projeto_automacao_wpp/
 └── mock_frontend/        # Interface web para simular o WhatsApp
     └── index.html
 
-
+```
 
 ---
 
